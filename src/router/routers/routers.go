@@ -1,6 +1,10 @@
 package routers
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/gorilla/mux"
+)
 
 //Router representa todas as rotas da api;
 type Router struct {
@@ -8,4 +12,15 @@ type Router struct {
 	Method string
 	Func   func(http.ResponseWriter, *http.Request)
 	RequiresAuth bool
+}
+
+//ConfigRouters coloca todas as rotas dentro do router;
+func ConfigRouters(r *mux.Router) *mux.Router {
+	routers := routerUser
+
+	for _, router := range routers {
+		r.HandleFunc(router.URI, router.Func).Methods(router.Method)
+	}
+
+	return r
 }
