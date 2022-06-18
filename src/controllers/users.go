@@ -1,6 +1,9 @@
 package controllers
 
-import "net/http"
+import (
+	"net/http"
+)
+
 
 //CreateUser vai registrar um usuário no banco de dados;
 func CreateUser(w http.ResponseWriter, r *http.Request) {
