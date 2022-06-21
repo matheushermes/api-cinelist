@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+
 	fmt.Println("API cineList rodando corretamente!");
 	r := router.Generate()
 
