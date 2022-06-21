@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cinelist/src/config"
 	"cinelist/src/router"
 	"fmt"
 	"log"
@@ -8,10 +9,9 @@ import (
 )
 
 func main() {
-
-	fmt.Println("API cineList rodando corretamente!");
+	config.LoadingEnvironmentVariables()
 	r := router.Generate()
 
-
-	log.Fatal(http.ListenAndServe(":5000", r))
+	fmt.Printf("API cineList rodando corretamente na porta %d!", config.Port);
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), r))
 }

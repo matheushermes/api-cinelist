@@ -1,21 +1,34 @@
 package config
 
 import (
-	"context"
+	"fmt"
 	"log"
+	"os"
+	"strconv"
 
-	firebase "firebase.google.com/go"
-	"google.golang.org/api/option"
+	"github.com/joho/godotenv"
 )
 
-//SetupFirebase configura o SDK do firebase;
-func SetupFirebase() *firebase.App {
+var (
+	//String de conexão com o banco de dados;
+	StringConnection = ""
 
-	sa := option.WithCredentialsFile("./serviceAccountKey.json")
-	app, err := firebase.NewApp(context.Background(), nil, sa)
-	if err != nil {
-		log.Fatalln(err)
+	//Port onde a API vai estar rodando;
+	Port = 0
+)
+
+//LoadingEnvironmentVariables vai carregar as váriaveis de ambiente;
+func LoadingEnvironmentVariables() {
+	var err error
+
+	if err = godotenv.Load(); err != nil {
+		log.Fatal(err)
 	}
 
-	return app
+	Port, err = strconv.Atoi(os.Getenv("API_PORT"))
+	if err != nil {
+		log.Fatal("Não foi possível carregar a porta 5000")
+	}
+
+	StringConnection = fmt.Sprintf("%s:%s@tcp(%s)/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("HOST"), os.Getenv("DB_NAME"))
 }
