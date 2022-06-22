@@ -30,19 +30,19 @@ func (user *User) Prepare(step string) error {
 func (user *User) validateUser(step string) error {
 
 	if user.Name == "" {
-		return errors.New("Campo nome está vazio!")
+		return errors.New("Campo nome não pode ficar vazio!")
 	}
 
 	if user.Email == "" {
-		return errors.New("Campo e-mail está vazio!")
+		return errors.New("Campo e-mail não pode ficar vazio!")
 	}
 
 	if user.Username == "" {
-		return errors.New("Campo username está vazio!")
+		return errors.New("Campo username não pode ficar vazio!")
 	}
 
 	if step == "register" && user.Password == "" {
-		return errors.New("Campo senha está vazio!")
+		return errors.New("Campo senha não pode ficar vazio!")
 	}
 
 	return nil
@@ -53,4 +53,5 @@ func (user *User) format() {
 	user.Name = strings.TrimSpace(user.Name)
 	user.Email = strings.TrimSpace(user.Email)
 	user.Username = strings.TrimSpace(user.Username)
+	user.Password = strings.TrimSpace(user.Password)
 }
