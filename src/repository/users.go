@@ -38,5 +38,31 @@ func (u users) Create(user models.User) (uint64, error) {
 //Update vai atualizar os dados de um usuário no banco de dados;
 func (u users) Update(ID uint64, user models.User) error {
 
-	statement, err :=
+	statement, err := u.db.Prepare("update users set name = ?, email = ?, username = ? where id = ?",)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err = statement.Exec(user.Name, user.Email, user.Username, ID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//Delete vai deletar um usuário no banco de dados;
+func (u users) Delete(ID uint64) error {
+
+	statement, err := u.db.Prepare("delete from users where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err = statement.Exec(ID); err != nil {
+		return err
+	}
+
+	return nil
 }

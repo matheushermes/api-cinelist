@@ -113,10 +113,34 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	answers.JSON(w, http.StatusNoContent, nil)
+	answers.JSON(w, http.StatusNoContent, err)
 }
 
 //DeleteUser vai deletar um usuário no banco de dados;
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Deletando usuário!"))
+
+	//Lendo o ID que vem por parâmetro;
+	parameter := mux.Vars(r)
+	userId, err := strconv.ParseUint(parameter["userId"], 10, 64)
+	if err != nil {
+		answers.Erro(w, http.StatusBadRequest, err)
+		return
+	}
+
+	//Abrindo conexão com o banco de dados;
+	db, err := database.ConnectingDatabase()
+	if err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	//Chamando o repositório;
+	repository := repository.NewRepositoryUsers(db)
+	if err = repository.Delete(userId); err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	answers.JSON(w, http.StatusNoContent, err)
 }
