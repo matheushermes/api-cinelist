@@ -34,3 +34,9 @@ func (u users) Create(user models.User) (uint64, error) {
 
 	return uint64(lastIdInsert), nil
 }
+
+//Update vai atualizar os dados de um usuário no banco de dados;
+func (u users) Update(ID uint64, user models.User) error {
+
+	statement, err :=
+}
