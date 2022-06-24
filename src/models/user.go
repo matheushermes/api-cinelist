@@ -1,9 +1,12 @@
 package models
 
 import (
+	"cinelist/src/security"
 	"errors"
 	"strings"
 	"time"
+
+	"github.com/badoux/checkmail"
 )
 
 //User representa um usuário utilizando a aplicação web
@@ -22,7 +25,10 @@ func (user *User) Prepare(step string) error {
 		return err
 	}
 
-	user.format()
+	if err := user.format(step); err != nil {
+		return err
+	}
+	
 	return nil
 }
 
@@ -37,6 +43,10 @@ func (user *User) validateUser(step string) error {
 		return errors.New("Campo e-mail não pode ficar em branco!")
 	}
 
+	if err := checkmail.ValidateFormat(user.Email); err != nil {
+		return errors.New("E-mail inserido é inválido!")
+	}
+
 	if user.Username == "" {
 		return errors.New("Campo username não pode ficar em branco!")
 	}
@@ -49,9 +59,20 @@ func (user *User) validateUser(step string) error {
 }
 
 //format remove os espaços em branco;
-func (user *User) format() {
+func (user *User) format(step string) error {
 	user.Name = strings.TrimSpace(user.Name)
 	user.Email = strings.TrimSpace(user.Email)
 	user.Username = strings.TrimSpace(user.Username)
 	user.Password = strings.TrimSpace(user.Password)
+
+	if step == "register" {
+		passwordWithHash, err := security.Hash(user.Password)
+		if err != nil {
+			return err
+		}
+
+		user.Password = string(passwordWithHash)
+	}
+
+	return nil
 }
