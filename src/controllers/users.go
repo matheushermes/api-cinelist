@@ -2,10 +2,12 @@ package controllers
 
 import (
 	"cinelist/src/answers"
+	"cinelist/src/auth"
 	"cinelist/src/database"
 	"cinelist/src/models"
 	"cinelist/src/repository"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -78,6 +80,19 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//Lendo usuário ID que vem no token;
+	userIDToken, err := auth.ExtractUserIdFromToken(r);
+	if err != nil {
+		answers.Erro(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	if userId != userIDToken {
+		answers.Erro(w, http.StatusForbidden, errors.New("Não é possível atualizar os dados de um usuário que não seja o seu!"))
+		return
+	}
+
+
 	//Lendo o corpo da requisição;
 	bodyRequest, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -142,5 +157,5 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	answers.JSON(w, http.StatusNoContent, err)
+	answers.JSON(w, http.StatusNoContent, errors.New("Conta deletada com sucesso!"))
 }
