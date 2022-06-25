@@ -80,7 +80,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//Lendo usuário ID que vem no token;
+	//Lendo ID que vem no token;
 	userIDToken, err := auth.ExtractUserIdFromToken(r);
 	if err != nil {
 		answers.Erro(w, http.StatusUnauthorized, err)
@@ -142,6 +142,18 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//Lendo ID que vem no token;
+	userIDToken, err := auth.ExtractUserIdFromToken(r)
+	if err != nil {
+		answers.Erro(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	if userId != userIDToken {
+		answers.Erro(w, http.StatusForbidden, errors.New("Não é possível deletar um usuário que não seja o seu!"))
+		return
+	}
+
 	//Abrindo conexão com o banco de dados;
 	db, err := database.ConnectingDatabase()
 	if err != nil {
@@ -157,5 +169,5 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	answers.JSON(w, http.StatusNoContent, errors.New("Conta deletada com sucesso!"))
+	answers.JSON(w, http.StatusNoContent, err)
 }
