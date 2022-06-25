@@ -50,5 +50,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token, _ := auth
 	w.Write([]byte("Logado com sucesso!"))
 }
