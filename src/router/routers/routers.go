@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"cinelist/src/middlewares"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -20,7 +21,12 @@ func ConfigRouters(r *mux.Router) *mux.Router {
 	routers = append(routers, routerLogin)
 
 	for _, router := range routers {
-		r.HandleFunc(router.URI, router.Func).Methods(router.Method)
+
+		if router.RequiresAuth == true {
+			r.HandleFunc(router.URI, middlewares.Logger(middlewares.Authenticate(router.Func))).Methods(router.Method)
+		} else {
+			r.HandleFunc(router.URI, middlewares.Logger(router.Func)).Methods(router.Method)
+		}
 	}
 
 	return r

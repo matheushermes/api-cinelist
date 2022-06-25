@@ -16,25 +16,25 @@ var routerUser = []Router{
 		URI:    		"/users",
 		Method: 		http.MethodGet,
 		Func: 			controllers.SearchUsers,
-		RequiresAuth: 	false,
+		RequiresAuth: 	true,
 	},
 	{
 		URI:    		"/user/{userId}",
 		Method: 		http.MethodGet,
 		Func: 			controllers.SearchUser,
-		RequiresAuth: 	false,
+		RequiresAuth: 	true,
 	},
 	{
 		URI:    		"/user/{userId}",
 		Method: 		http.MethodPut,
 		Func: 			controllers.UpdateUser,
-		RequiresAuth: 	false,
+		RequiresAuth: 	true,
 	},
 	{
 		URI:    		"/user/{userId}",
 		Method: 		http.MethodDelete,
 		Func: 			controllers.DeleteUser,
-		RequiresAuth: 	false,
+		RequiresAuth: 	true,
 	},
 	
 }
