@@ -2,6 +2,7 @@ package auth
 
 import (
 	"cinelist/src/config"
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -17,11 +18,10 @@ func CreateToken(userId uint64) (string, error) {
 	permissions["exp"] = time.Now().Add(time.Hour * 8).Unix()
 	permissions["userId"] = userId
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, permissions)
-
 	return token.SignedString([]byte(config.SecretKey))
 }
 
-//extractToken
+//extractToken extrai o token do Header Authotization;
 func extractToken(r *http.Request) string {
 	token := r.Header.Get("Authorization")
 
@@ -33,7 +33,7 @@ func extractToken(r *http.Request) string {
 }
 
 //returnVericationKey returna a chave de verificação;
-func returnVericationKey(token *jwt.Token) (interface{}, error) {
+func returnVerificationKey(token *jwt.Token) (interface{}, error) {
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 		return nil, fmt.Errorf("Método de assinatura inesperado %v", token.Header["alg"])
 	}
@@ -44,13 +44,16 @@ func returnVericationKey(token *jwt.Token) (interface{}, error) {
 //ValidateToken verifica se o token passado na requisição é valido;
 func ValidateToken(r *http.Request) error {
 	tokenString := extractToken(r)
-	token, err := jwt.Parse(tokenString, returnVericationKey)
+	token, err := jwt.Parse(tokenString, returnVerificationKey)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(token)
-	return nil
+	if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return nil
+	}
+	
+	return errors.New("Token inválido!")
 }
 
 

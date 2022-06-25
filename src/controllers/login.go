@@ -8,7 +8,6 @@ import (
 	"cinelist/src/repository"
 	"cinelist/src/security"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -58,5 +57,5 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(token)
+	w.Write([]byte(token))
 }
