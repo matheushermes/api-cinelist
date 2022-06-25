@@ -15,6 +15,9 @@ var (
 
 	//Port onde a API vai estar rodando;
 	Port = 0
+
+
+	SecretKey []byte
 )
 
 //LoadingEnvironmentVariables vai carregar as váriaveis de ambiente;
@@ -31,4 +34,6 @@ func LoadingEnvironmentVariables() {
 	}
 
 	StringConnection = fmt.Sprintf("%s:%s@tcp(%s)/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("HOST"), os.Getenv("DB_NAME"))
+
+	SecretKey = []byte(os.Getenv("SECRET_KEY"))
 }

@@ -2,11 +2,13 @@ package controllers
 
 import (
 	"cinelist/src/answers"
+	"cinelist/src/auth"
 	"cinelist/src/database"
 	"cinelist/src/models"
 	"cinelist/src/repository"
 	"cinelist/src/security"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -50,6 +52,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, _ := auth
-	w.Write([]byte("Logado com sucesso!"))
+	token, _ := auth.CreateToken(userSavedDataBase.ID)
+	fmt.Println(token)
 }

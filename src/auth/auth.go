@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"cinelist/src/config"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -14,5 +15,5 @@ func CreateToken(userId uint64) (string, error) {
 	permissions["userId"] = userId
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, permissions)
 
-	return token.SignedString([]byte("Secret"))
+	return token.SignedString([]byte(config.SecretKey))
 }
