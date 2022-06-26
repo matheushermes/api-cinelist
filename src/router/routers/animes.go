@@ -7,7 +7,7 @@ import (
 
 var routerAnimeList = []Router{
 	{
-		URI:    		"/anime",
+		URI:    		"/animes",
 		Method: 		http.MethodPost,
 		Func: 			controllers.CreateNewAnime,
 		RequiresAuth: 	true,
@@ -19,27 +19,33 @@ var routerAnimeList = []Router{
 		RequiresAuth: 	true,
 	},
 	{
-		URI:    		"/anime/{animeId}",
+		URI:    		"/animes/{animeId}",
 		Method: 		http.MethodGet,
 		Func: 			controllers.SearchAnime,
 		RequiresAuth: 	true,
 	},
 	{
-		URI:    		"/anime/{animeId}",
+		URI:    		"/animes/{animeId}",
 		Method: 		http.MethodPut,
 		Func: 			controllers.UpdateAnime,
 		RequiresAuth: 	true,
 	},
 	{
-		URI:    		"/anime/{animeId}",
+		URI:    		"/animes/{animeId}",
 		Method: 		http.MethodDelete,
-		Func: 			controllers.CreateNewAnime,
+		Func: 			controllers.DeleteAnime,
 		RequiresAuth: 	true,
 	},
 	{
-		URI:    		"/anime",
+		URI:    		"/animes/{animeId}/favorite",
 		Method: 		http.MethodPost,
-		Func: 			controllers.CreateNewAnime,
+		Func: 			controllers.AddFavoriteAnime,
+		RequiresAuth: 	true,
+	},
+	{
+		URI:    		"/animes/{animeId}/remove-favorite",
+		Method: 		http.MethodPost,
+		Func: 			controllers.RemoveFavoriteAnime,
 		RequiresAuth: 	true,
 	},
 }

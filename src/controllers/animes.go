@@ -31,3 +31,8 @@ func DeleteAnime(w http.ResponseWriter, r *http.Request) {
 func AddFavoriteAnime(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Adicionando anime a lista de favoritos"))
 }
+
+//RemoveFavoriteAnime remove um anime da lista de favoritos do usuário;
+func RemoveFavoriteAnime(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Removendo anime da lista de favoritos"))
+}
