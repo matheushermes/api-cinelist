@@ -171,3 +171,28 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	answers.JSON(w, http.StatusNoContent, err)
 }
+
+//UpdatePassword vai fazer a atualização da senha do usuário;
+func UpdatePassword(w http.ResponseWriter, r *http.Request) {
+	//Lendo o ID do usuário que está vindo por parâmetro da requisição;
+	parameter := mux.Vars(r)
+	userId, err := strconv.ParseUint(parameter["userId"], 10, 64)
+	if err != nil {
+		answers.Erro(w, http.StatusBadRequest, err)
+		return
+	}
+
+	//Lendo ID vindo do token do usuário;
+	userIdToken, err := auth.ExtractUserIdFromToken(r)
+	if err != nil {
+		answers.Erro(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	if userId != userIdToken {
+		answers.Erro(w, http.StatusForbidden, errors.New("Não é possível atualizar a senha de um usuário que não seja o seu!"))
+		return
+	}
+
+	
+}
