@@ -86,3 +86,38 @@ func (u users) SearchUserByEmail(email string) (models.User, error) {
 
 	return user, nil
 }
+
+//SearchPassord busca a senha de um usuário salvo no banco de dados pelo seu ID;
+func (u users) SearchPassword(ID uint64) (string, error) {
+
+	line, err := u.db.Query("select password from users where id = ?", ID)
+	if err != nil {
+		return "", err
+	}
+	defer line.Close()
+
+	var user models.User
+
+	if line.Next() {
+		if err = line.Scan(&user.Password); err != nil {
+			return "", err
+		}
+	}
+
+	return user.Password, nil
+}
+
+//UpdatePassword vai atualizar a senha de um usuário no banco de dados;
+func (u users) UpdatePassword(ID uint64, newPassword string) error {
+	statement, err := u.db.Prepare("update users set password = ? where id = ?",)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err = statement.Exec(newPassword, ID); err != nil {
+		return err
+	}
+
+	return nil
+}

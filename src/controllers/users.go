@@ -6,6 +6,7 @@ import (
 	"cinelist/src/database"
 	"cinelist/src/models"
 	"cinelist/src/repository"
+	"cinelist/src/security"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
@@ -194,5 +195,53 @@ func UpdatePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	
+	//Lendo o corpo da requisição;
+	bodyRequest, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		answers.Erro(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	//Colocando o corpo da requisição em um struct;
+	var password models.UpdatePassword
+	if err = json.Unmarshal(bodyRequest, &password); err != nil {
+		answers.Erro(w, http.StatusBadRequest, err)
+		return
+	}
+
+	//Abrindo conexão com o bando de dados;
+	db, err := database.ConnectingDatabase()
+	if err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	//Chamando o repositório buscar senha no banco de dados;
+	repository := repository.NewRepositoryUsers(db)
+	passwordSavedDataBase, err := repository.SearchPassword(userId)
+	if err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	//Comparando senha com hash vinda do banco de dados, com a senha atual informada na requisição;
+	if err = security.CheckPassword(passwordSavedDataBase, password.CurrentPassword); err != nil {
+		answers.Erro(w, http.StatusUnauthorized, errors.New("Senha atual incorreta!"))
+		return
+	}
+
+	//Colocando hash na nova senha;
+	passwordWithHash, err := security.Hash(password.NewPassword)
+	if err != nil {
+		answers.Erro(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if err = repository.UpdatePassword(userId, string(passwordWithHash)); err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	answers.JSON(w, http.StatusNoContent, nil)
 }
