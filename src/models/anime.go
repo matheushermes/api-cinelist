@@ -13,6 +13,7 @@ type AnimeList struct {
 	Name      	string    	`json:"name,omitempty"`
 	Genre     	string    	`json:"genre,omitempty"`
 	Rating    	string    	`json:"rating,omitempty"`
+	UserID		uint64		`json:"userid,omitempty"`
 	Favorite	bool		`json:"favorite,omitempty"`
 	CreatedIn 	time.Time 	`json:"createdIn,omitempty"`
 }
@@ -42,7 +43,7 @@ func (newAnime *AnimeList) validate() error {
 	}
 
 	//Convertando a nota do anime para um uint;
-	ratingUint, err := strconv.ParseUint(newAnime.Rating, 10, 64)
+	ratingUint, err := strconv.ParseInt(newAnime.Rating, 10, 64)
 	if err != nil {
 		return errors.New("Não foi possível converter a nota passada para um uint")
 	}
@@ -63,5 +64,6 @@ func (newAnime *AnimeList) format() {
 
 	//Colocando a nome do anime em letra miniscula;
 	newAnime.Name = strings.ToLower(newAnime.Name)
+	newAnime.Genre = strings.ToLower(newAnime.Genre)
 }
 
