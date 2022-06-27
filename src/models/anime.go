@@ -7,12 +7,14 @@ import (
 	"time"
 )
 
+//AnimeList Representa ao um anime adicionado em sua lista pelo o usuário;
 type AnimeList struct {
-	ID        uint64    `json: "id,omitempty"`
-	Name      string    `json: "name,omitempty"`
-	Genre     string    `json: "type,omitempty"`
-	Rating    string    `json: "type,omitempty"`
-	CreatedIn time.Time `json:"createdIn,omitempty"`
+	ID        	uint64    	`json:"id,omitempty"`
+	Name      	string    	`json:"name,omitempty"`
+	Genre     	string    	`json:"genre,omitempty"`
+	Rating    	string    	`json:"rating,omitempty"`
+	Favorite	bool		`json:"favorite,omitempty"`
+	CreatedIn 	time.Time 	`json:"createdIn,omitempty"`
 }
 
 //Prepare vai chamar validar um novo anime;
