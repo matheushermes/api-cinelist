@@ -9,6 +9,9 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 //CreateNewAnime vai adicionar um novo anime a lista de animes já assistidos;
@@ -32,6 +35,10 @@ func CreateNewAnime(w http.ResponseWriter, r *http.Request) {
 	if err = json.Unmarshal(bodyRequest, &anime); err != nil {
 		answers.Erro(w, http.StatusBadRequest, err)
 		return
+	}
+
+	if anime.Favorite != 1 {
+		anime.Favorite = 0
 	}
 
 	//Adicionando o ID extraido do token no struct;
@@ -65,12 +72,36 @@ func CreateNewAnime(w http.ResponseWriter, r *http.Request) {
 
 //SearchAnimeList traz todos os animes adicionados pelo usuário em sua lista de animes já assistidos;
 func SearchAnimeList(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Buscando sua lista de animes assistidos"))
+
 }
 
 //SearchAnime traz o anime escolhido pelo usuário;
 func SearchAnime(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Buscando anime mencionado"))
+		//Pegando ID vindo por parâmetro;
+		parameters := mux.Vars(r)
+		animeId, err:= strconv.ParseUint(parameters["animeId"], 10, 64)
+		if err != nil {
+			answers.Erro(w, http.StatusBadRequest, err)
+			return
+		}
+	
+		//Abrindo conexão com o banco de dados;
+		db, err := database.ConnectingDatabase()
+		if err != nil {
+			answers.Erro(w, http.StatusInternalServerError, err)
+			return
+		}
+		defer db.Close()
+	
+		//Chamando repositório
+		repository := repository.NewRepositoryAnimes(db)
+		anime, err := repository.GetAnime(animeId)
+		if err != nil {
+			answers.Erro(w, http.StatusInternalServerError, err)
+			return
+		}
+	
+		answers.JSON(w, http.StatusOK, anime)
 }
 
 //UpdateAnime altera os dados de um anime adicionado;

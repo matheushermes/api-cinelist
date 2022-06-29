@@ -13,8 +13,8 @@ type AnimeList struct {
 	Name      	string    	`json:"name,omitempty"`
 	Genre     	string    	`json:"genre,omitempty"`
 	Rating    	string    	`json:"rating,omitempty"`
-	UserID		uint64		`json:"userid,omitempty"`
-	Favorite	bool		`json:"favorite,omitempty"`
+	UserID		uint64		`json:"userId,omitempty"`
+	Favorite	int64		`json:"favorite,omitempty"`
 	CreatedIn 	time.Time 	`json:"createdIn,omitempty"`
 }
 
