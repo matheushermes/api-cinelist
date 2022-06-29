@@ -53,3 +53,8 @@ func (a animes) GetAnime(animeID uint64) (models.AnimeList, error) {
 
 	return anime, nil
 }
+
+//GetAnimeList Vai retornar todos os animes inseridos pelo o usuário;
+func (a animes) GetAnimeList(userID uint64) ([]models.AnimeList, error) {
+
+}
