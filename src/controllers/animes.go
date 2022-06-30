@@ -7,6 +7,7 @@ import (
 	"cinelist/src/models"
 	"cinelist/src/repository"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -129,7 +130,69 @@ func SearchAnime(w http.ResponseWriter, r *http.Request) {
 
 //UpdateAnime altera os dados de um anime adicionado;
 func UpdateAnime(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Atualizando anime"))
+	//ID inserido no token do usuário;
+	userId, err := auth.ExtractUserIdFromToken(r)
+	if err != nil {
+		answers.Erro(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	//Pegando o ID vindo por parâmetro;
+	parameters:= mux.Vars(r)
+	animeId, err := strconv.ParseUint(parameters["animeId"], 10, 64)
+	if err != nil {
+		answers.Erro(w, http.StatusBadRequest, err)
+		return
+	}
+
+	//Abrindo conexão com o banco de dados;
+	db, err := database.ConnectingDatabase()
+	if err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	//Chamando repositório;
+	repository := repository.NewRepositoryAnimes(db)
+	animeSavedDB, err := repository.GetAnime(animeId)
+	if err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if animeSavedDB.UserID != userId {
+		answers.Erro(w, http.StatusForbidden, errors.New("Você não pode atualizar um anime que não tenha sido inserido por você!"))
+		return
+	}
+
+	//Lendo o corpo da requisição;
+	bodyRequest, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		answers.Erro(w, http.StatusBadRequest, err)
+		return
+	}
+
+	//Colocando o corpo da requisição dentro de um struct;
+	var anime models.AnimeList
+	if err = json.Unmarshal(bodyRequest, &anime); err != nil {
+		answers.Erro(w, http.StatusBadRequest, err)
+		return
+	}
+
+	//Validar dados do anime;
+	if err = anime.Prepare(); err != nil {
+		answers.Erro(w, http.StatusBadRequest, err)
+		return
+	}
+
+	//Chamando novamente o repositório;
+	if err = repository.UpdateAnime(animeId, anime); err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	answers.JSON(w, http.StatusNoContent, nil)
 }
 
 //DeleteAnime altera os dados de um anime adicionado;

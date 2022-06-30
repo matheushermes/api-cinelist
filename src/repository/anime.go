@@ -37,7 +37,7 @@ func (a animes) CreateAnime(anime models.AnimeList) (uint64, error) {
 
 //GetAnime vai buscar um anime pelo seu ID no banco de dados;
 func (a animes) GetAnime(animeID uint64) (models.AnimeList, error) {
-	line, err := a.db.Query("select a.id, a.name, a.genre, a.rating, a.favorite from animeList a inner join users u on u.id = a.user_id where a.id = ?", animeID)
+	line, err := a.db.Query("select a.id, a.name, a.genre, a.rating, a.favorite, a.user_id from animeList a inner join users u on u.id = a.user_id where a.id = ?", animeID)
 	if err != nil {
 		return models.AnimeList{}, err
 	}
@@ -46,7 +46,7 @@ func (a animes) GetAnime(animeID uint64) (models.AnimeList, error) {
 	var anime models.AnimeList
 
 	if line.Next() {
-		if err = line.Scan(&anime.ID, &anime.Name, &anime.Genre, &anime.Rating, &anime.Favorite); err != nil {
+		if err = line.Scan(&anime.ID, &anime.Name, &anime.Genre, &anime.Rating, &anime.Favorite, &anime.UserID); err != nil {
 			return models.AnimeList{}, err
 		}
 	}
@@ -75,4 +75,18 @@ func (a animes) GetAnimeList(userID uint64) ([]models.AnimeList, error) {
 	}
 
 	return animes, nil
+}
+
+func (a animes) UpdateAnime(ID uint64, anime models.AnimeList) error {
+	statement, err := a.db.Prepare("update animeList set name = ?, genre = ?, rating = ? where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err = statement.Exec(anime.Name, anime.Genre, anime.Rating, ID); err != nil {
+		return err
+	}
+
+	return nil
 }
