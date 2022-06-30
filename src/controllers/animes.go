@@ -197,7 +197,48 @@ func UpdateAnime(w http.ResponseWriter, r *http.Request) {
 
 //DeleteAnime altera os dados de um anime adicionado;
 func DeleteAnime(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Deletando anime"))
+	//ID inserido no token do usuário;
+	userId, err := auth.ExtractUserIdFromToken(r)
+	if err != nil {
+		answers.Erro(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	//Pegando o ID vindo por parâmetro;
+	parameters:= mux.Vars(r)
+	animeId, err := strconv.ParseUint(parameters["animeId"], 10, 64)
+	if err != nil {
+		answers.Erro(w, http.StatusBadRequest, err)
+		return
+	}
+
+	//Abrindo conexão com o banco de dados;
+	db, err := database.ConnectingDatabase()
+	if err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	//Chamando repositório;
+	repository := repository.NewRepositoryAnimes(db)
+	animeSavedDB, err := repository.GetAnime(animeId)
+	if err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if animeSavedDB.UserID != userId {
+		answers.Erro(w, http.StatusForbidden, errors.New("Você não pode deletar um anime que não tenha sido inserido por você!"))
+		return
+	}
+
+	if err = repository.DeleteAnime(animeId); err != nil {
+		answers.Erro(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	answers.JSON(w, http.StatusNoContent, err)
 }
 
 //AddFavoriteAnime adiciona um anime a sua lista de animes favoritos;

@@ -77,14 +77,30 @@ func (a animes) GetAnimeList(userID uint64) ([]models.AnimeList, error) {
 	return animes, nil
 }
 
-func (a animes) UpdateAnime(ID uint64, anime models.AnimeList) error {
+//UpdateAnime atualiza um anime inserido pelo usuário no banco de dados;
+func (a animes) UpdateAnime(animeID uint64, anime models.AnimeList) error {
 	statement, err := a.db.Prepare("update animeList set name = ?, genre = ?, rating = ? where id = ?")
 	if err != nil {
 		return err
 	}
 	defer statement.Close()
 
-	if _, err = statement.Exec(anime.Name, anime.Genre, anime.Rating, ID); err != nil {
+	if _, err = statement.Exec(anime.Name, anime.Genre, anime.Rating, animeID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//DeleteAnime deleta um anime da lista de animes do usuário no banco de dados;
+func (a animes) DeleteAnime(animeID uint64) error {
+	statement, err := a.db.Prepare("delete from animeList where id = ?")
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err = statement.Exec(animeID); err != nil {
 		return err
 	}
 
