@@ -72,7 +72,30 @@ func CreateNewAnime(w http.ResponseWriter, r *http.Request) {
 
 //SearchAnimeList traz todos os animes adicionados pelo usuário em sua lista de animes já assistidos;
 func SearchAnimeList(w http.ResponseWriter, r *http.Request) {
+	//Extrair ID do token do usuário que esta fazendo a requisição;
+	userId, err := auth.ExtractUserIdFromToken(r)
+	if err != nil {
+		answers.Erro(w, http.StatusUnauthorized, err)
+		return
+	}
 
+	//Abrindo conexão com o banco de dados;
+	db, err := database.ConnectingDatabase()
+	if err != nil {
+		answers.Erro(w, http.StatusUnauthorized, err)
+		return
+	}
+	defer db.Close()
+
+	//chamando repositório;
+	repository := repository.NewRepositoryAnimes(db);
+	animes, err := repository.GetAnimeList(userId)
+	if err != nil {
+		answers.Erro(w , http.StatusInternalServerError, err)
+		return
+	}
+
+	answers.JSON(w, http.StatusOK, animes)
 }
 
 //SearchAnime traz o anime escolhido pelo usuário;

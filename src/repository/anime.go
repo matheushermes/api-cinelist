@@ -56,5 +56,23 @@ func (a animes) GetAnime(animeID uint64) (models.AnimeList, error) {
 
 //GetAnimeList Vai retornar todos os animes inseridos pelo o usuário;
 func (a animes) GetAnimeList(userID uint64) ([]models.AnimeList, error) {
+	lines, err := a.db.Query("select a.id, a.name, a.genre, a.rating, a.favorite from animeList a inner join users u on u.id = a.user_id where a.user_id = ?", userID)
+	if err != nil {
+		return []models.AnimeList{}, err
+	}
+	defer lines.Close()
 
+	var animes []models.AnimeList
+
+	for lines.Next() {
+		var anime models.AnimeList
+
+		if err = lines.Scan(&anime.ID, &anime.Name, &anime.Genre, &anime.Rating, &anime.Favorite); err != nil {
+			return nil, err
+		}
+
+		animes = append(animes, anime)
+	}
+
+	return animes, nil
 }
