@@ -240,13 +240,3 @@ func DeleteAnime(w http.ResponseWriter, r *http.Request) {
 
 	answers.JSON(w, http.StatusNoContent, err)
 }
-
-//AddFavoriteAnime adiciona um anime a sua lista de animes favoritos;
-func AddFavoriteAnime(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Adicionando anime a lista de favoritos"))
-}
-
-//RemoveFavoriteAnime remove um anime da lista de favoritos do usuário;
-func RemoveFavoriteAnime(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Removendo anime da lista de favoritos"))
-}

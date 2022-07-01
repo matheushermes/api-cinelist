@@ -36,16 +36,4 @@ var routerAnimeList = []Router{
 		Func: 			controllers.DeleteAnime,
 		RequiresAuth: 	true,
 	},
-	{
-		URI:    		"/anime/{animeId}/favorite",
-		Method: 		http.MethodPost,
-		Func: 			controllers.AddFavoriteAnime,
-		RequiresAuth: 	true,
-	},
-	{
-		URI:    		"/anime/{animeId}/remove-favorite",
-		Method: 		http.MethodPost,
-		Func: 			controllers.RemoveFavoriteAnime,
-		RequiresAuth: 	true,
-	},
 }

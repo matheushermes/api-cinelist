@@ -79,13 +79,13 @@ func (a animes) GetAnimeList(userID uint64) ([]models.AnimeList, error) {
 
 //UpdateAnime atualiza um anime inserido pelo usuário no banco de dados;
 func (a animes) UpdateAnime(animeID uint64, anime models.AnimeList) error {
-	statement, err := a.db.Prepare("update animeList set name = ?, genre = ?, rating = ? where id = ?")
+	statement, err := a.db.Prepare("update animeList set name = ?, genre = ?, rating = ?, favorite = ? where id = ?")
 	if err != nil {
 		return err
 	}
 	defer statement.Close()
 
-	if _, err = statement.Exec(anime.Name, anime.Genre, anime.Rating, animeID); err != nil {
+	if _, err = statement.Exec(anime.Name, anime.Genre, anime.Rating, anime.Favorite, animeID); err != nil {
 		return err
 	}
 
