@@ -56,7 +56,7 @@ func (m movies) GetMovie(movieID uint64) (models.Program, error) {
 
 //GetMovieList Vai retornar todos os filmes inseridos pelo o usuário;
 func (m movies) GetMovieList(userID uint64) ([]models.Program, error) {
-	lines, err := m.db.Query("select m.id, m.name, m.genre, m.rating, m.favorite from animeList m inner join users u on u.id = m.user_id where m.user_id = ?", userID)
+	lines, err := m.db.Query("select m.id, m.name, m.genre, m.rating, m.favorite from movieList m inner join users u on u.id = m.user_id where m.user_id = ?", userID)
 	if err != nil {
 		return []models.Program{}, err
 	}
