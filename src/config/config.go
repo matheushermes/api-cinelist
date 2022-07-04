@@ -28,9 +28,9 @@ func LoadingEnvironmentVariables() {
 		log.Fatal(err)
 	}
 
-	Port, err = strconv.Atoi(os.Getenv("API_PORT"))
+	Port, err = strconv.Atoi(os.Getenv("PORT"))
 	if err != nil {
-		log.Fatal("Não foi possível carregar a porta 5000")
+		log.Fatal("Não foi possível carregar a porta")
 	}
 
 	StringConnection = fmt.Sprintf("%s:%s@tcp(%s)/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("HOST"), os.Getenv("DB_NAME"))
