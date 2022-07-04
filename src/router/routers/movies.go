@@ -5,35 +5,35 @@ import (
 	"net/http"
 )
 
-var routerAnimeList = []Router{
+var routerMovieList = []Router{
 	{
-		URI:    		"/animes",
+		URI:    		"/movies",
 		Method: 		http.MethodPost,
-		Func: 			controllers.CreateNewAnime,
+		Func: 			controllers.CreateNewMovie,
 		RequiresAuth: 	true,
 	},
 	{
-		URI:    		"/animes",
+		URI:    		"/movies",
 		Method: 		http.MethodGet,
-		Func: 			controllers.SearchAnimeList,
+		Func: 			controllers.SearchMovieList,
 		RequiresAuth: 	true,
 	},
 	{
-		URI:    		"/anime/{animeId}",
+		URI:    		"/movie/{movieId}",
 		Method: 		http.MethodGet,
-		Func: 			controllers.SearchAnime,
+		Func: 			controllers.SearchMovie,
 		RequiresAuth: 	true,
 	},
 	{
-		URI:    		"/anime/{animeId}",
+		URI:    		"/movie/{movieId}",
 		Method: 		http.MethodPut,
-		Func: 			controllers.UpdateAnime,
+		Func: 			controllers.UpdateMovie,
 		RequiresAuth: 	true,
 	},
 	{
-		URI:    		"/anime/{animeId}",
+		URI:    		"/movie/{movieId}",
 		Method: 		http.MethodDelete,
-		Func: 			controllers.DeleteAnime,
+		Func: 			controllers.DeleteMovie,
 		RequiresAuth: 	true,
 	},
 }

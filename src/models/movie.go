@@ -8,7 +8,7 @@ import (
 )
 
 //AnimeList Representa ao um anime adicionado em sua lista pelo o usuário;
-type AnimeList struct {
+type Program struct {
 	ID        	uint64    	`json:"id,omitempty"`
 	Name      	string    	`json:"name,omitempty"`
 	Genre     	string    	`json:"genre,omitempty"`
@@ -19,31 +19,31 @@ type AnimeList struct {
 }
 
 //Prepare vai chamar validar um novo anime;
-func (newAnime *AnimeList) Prepare() error {
-	if err := newAnime.validate(); err != nil {
+func (newProgram *Program) Prepare() error {
+	if err := newProgram.validate(); err != nil {
 		return err
 	}
 
-	newAnime.format()
+	newProgram.format()
 	return nil
 }
 
 //validate valida um novo anime que vai ser adicionado na lista do usuário;
-func (newAnime *AnimeList) validate() error {
-	if newAnime.Name == "" {
+func (newProgram *Program) validate() error {
+	if newProgram.Name == "" {
 		return errors.New("Por favor, insira o nome do anime!")
 	}
 
-	if newAnime.Genre == "" {
+	if newProgram.Genre == "" {
 		return errors.New("Por favor, insira o gênero do anime!")
 	}
 
-	if newAnime.Rating == ""  {
+	if newProgram.Rating == ""  {
 		return errors.New("Por favor, insira uma nota de avaliação para o anime que quer inserir!")
 	}
 
 	//Convertando a nota do anime para um uint;
-	ratingUint, err := strconv.ParseInt(newAnime.Rating, 10, 64)
+	ratingUint, err := strconv.ParseInt(newProgram.Rating, 10, 64)
 	if err != nil {
 		return errors.New("Não foi possível converter a nota passada para um uint")
 	}
@@ -58,12 +58,12 @@ func (newAnime *AnimeList) validate() error {
 }
 
 //format formata o nome do anime passado na requisição pelo usuário;
-func (newAnime *AnimeList) format() {
+func (newProgram *Program) format() {
 	//Removendo os espaços das estremidades;
-	newAnime.Name = strings.TrimSpace(newAnime.Name)
+	newProgram.Name = strings.TrimSpace(newProgram.Name)
 
 	//Colocando a nome do anime em letra miniscula;
-	newAnime.Name = strings.ToLower(newAnime.Name)
-	newAnime.Genre = strings.ToLower(newAnime.Genre)
+	newProgram.Name = strings.ToLower(newProgram.Name)
+	newProgram.Genre = strings.ToLower(newProgram.Genre)
 }
 

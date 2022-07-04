@@ -19,7 +19,7 @@ type Router struct {
 func ConfigRouters(r *mux.Router) *mux.Router {
 	routers := routerUser
 	routers = append(routers, routerLogin)
-	routers = append(routers, routerAnimeList...)
+	routers = append(routers, routerMovieList...)
 
 	for _, router := range routers {
 
