@@ -31,15 +31,15 @@ func (newProgram *Program) Prepare() error {
 //validate valida um novo anime que vai ser adicionado na lista do usuário;
 func (newProgram *Program) validate() error {
 	if newProgram.Name == "" {
-		return errors.New("Por favor, insira o nome do anime!")
+		return errors.New("Por favor, insira o nome do filme!")
 	}
 
 	if newProgram.Genre == "" {
-		return errors.New("Por favor, insira o gênero do anime!")
+		return errors.New("Por favor, insira o gênero do filme!")
 	}
 
 	if newProgram.Rating == ""  {
-		return errors.New("Por favor, insira uma nota de avaliação para o anime que quer inserir!")
+		return errors.New("Por favor, insira uma nota de avaliação para o filme que quer inserir!")
 	}
 
 	//Convertando a nota do anime para um uint;
@@ -49,9 +49,9 @@ func (newProgram *Program) validate() error {
 	}
 
 	if ratingUint < 0 {
-		return errors.New("A nota atribuida ao anime não pode ser menor do que 0")
+		return errors.New("A nota atribuida ao filme não pode ser menor do que 0")
 	} else if ratingUint > 5 {
-		return errors.New("A nota atribuida ao anime não pode ser maior do que 5")
+		return errors.New("A nota atribuida ao filme não pode ser maior do que 5")
 	}
 
 	return nil
