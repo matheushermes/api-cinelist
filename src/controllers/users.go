@@ -18,6 +18,7 @@ import (
 
 //CreateUser vai registrar um usuário no banco de dados;
 func CreateUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	//Lendo o corpo da requisição;
 	bodyRequest, err := ioutil.ReadAll(r.Body);
