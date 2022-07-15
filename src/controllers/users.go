@@ -16,12 +16,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
+//setupCorsResponse Implementa o CORS;
+func setupCorsResponse(w *http.ResponseWriter, r *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*") 
+   (*w).Header(). Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE") 
+   (*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content- Tipo, Comprimento do Conteúdo, Autorização") 
+}
+
 //CreateUser vai registrar um usuário no banco de dados;
 func CreateUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
-	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	setupCorsResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
 
 	//Lendo o corpo da requisição;
 	bodyRequest, err := ioutil.ReadAll(r.Body);
