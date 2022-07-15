@@ -24,9 +24,9 @@ func ConfigRouters(r *mux.Router) *mux.Router {
 	for _, router := range routers {
 
 		if router.RequiresAuth == true {
-			r.HandleFunc(router.URI, middlewares.Logger(middlewares.Authenticate(router.Func))).Methods(router.Method, http.MethodOptions)
+			r.HandleFunc(router.URI, middlewares.Logger(middlewares.Authenticate(router.Func))).Methods(router.Method)
 		} else {
-			r.HandleFunc(router.URI, middlewares.Logger(router.Func)).Methods(router.Method, http.MethodOptions)
+			r.HandleFunc(router.URI, middlewares.Logger(router.Func)).Methods(router.Method)
 		}
 	}
 
