@@ -6,12 +6,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/handlers"
 )
 
 func main() {
 	config.LoadingEnvironmentVariables()
 	r := router.Generate()
 
+	//Cors
+	allowedHeader := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type"})
+	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"})
+
+
 	fmt.Printf("API cineList rodando corretamente na porta %d!", config.Port);
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), r))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), handlers.CORS(allowedHeader, allowedOrigins, allowedMethods)(r)))
 }
