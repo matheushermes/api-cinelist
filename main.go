@@ -16,7 +16,7 @@ func main() {
 
 	//Cors
 	allowedHeader := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type"})
-	allowedOrigins := handlers.AllowedOrigins([]string{"http://127.0.0.1:5500"})
+	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
 	allowedMethods := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"})
 
 

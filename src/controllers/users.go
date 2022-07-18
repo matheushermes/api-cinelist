@@ -24,6 +24,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	if (r.Method == "OPTIONS") {
 		w.Header().Set("Access-Control-Allow-Headers", "Authorization")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 	}
 
 	//Lendo o corpo da requisição;
