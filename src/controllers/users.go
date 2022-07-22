@@ -9,6 +9,7 @@ import (
 	"cinelist/src/security"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -83,6 +84,11 @@ func SearchUser(w http.ResponseWriter, r *http.Request) {
 
 	repository := repository.NewRepositoryUsers(db)
 	user, err := repository.SearchUserForID(userId)
+	if err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+	}
+
+	fmt.Println(user)
 
 	answers.JSON(w, http.StatusOK, user)
 }

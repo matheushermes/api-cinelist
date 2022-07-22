@@ -37,16 +37,16 @@ func (u users) Create(user models.User) (uint64, error) {
 
 //SearchUserForID traz um usuário do banco de dados;
 func (u users) SearchUserForID(ID uint64) (models.User, error) {
-	line, err := u.db.Query("select id, name, username, email, createdIn from users where id = ?", ID)
+	line, err := u.db.Query("select id, name, username, email from users where id = ?", ID)
 	if err != nil {
 		return models.User{}, err
 	}
-	line.Close()
+	defer line.Close()
 
 	var user models.User
 
 	if line.Next() {
-		if err = line.Scan(&user.ID, &user.Username, &user.Email, &user.CreatedIn); err != nil {
+		if err = line.Scan(&user.ID, &user.Name ,&user.Username, &user.Email); err != nil {
 			return models.User{}, err
 		}
 	}
