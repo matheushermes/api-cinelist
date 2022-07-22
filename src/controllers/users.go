@@ -66,7 +66,25 @@ func SearchUsers(w http.ResponseWriter, r *http.Request) {
 
 //SearchUser vai buscar um único usuário registrado no banco de dados;
 func SearchUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Ainda será implementado o método de buscar um único usuário"))
+	parameters := mux.Vars(r)
+
+	userId, err := strconv.ParseUint(parameters["userId"], 10, 64)
+	if err != nil {
+		answers.Erro(w, http.StatusBadRequest, err)
+		return
+	}
+
+	db, err := database.ConnectingDatabase()
+	if err != nil {
+		answers.Erro(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	repository := repository.NewRepositoryUsers(db)
+	user, err := repository.SearchUserForID(userId)
+
+	answers.JSON(w, http.StatusOK, user)
 }
 
 //UpdateUser vai atualizar os dados de usuário no banco de dados;

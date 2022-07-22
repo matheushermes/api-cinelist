@@ -35,6 +35,24 @@ func (u users) Create(user models.User) (uint64, error) {
 	return uint64(lastIdInsert), nil
 }
 
+//SearchUserForID traz um usuário do banco de dados;
+func (u users) SearchUserForID(ID uint64) (models.User, error) {
+	line, err := u.db.Query("select id, name, username, email, createdIn from users where id = ?", ID)
+	if err != nil {
+		return models.User{}, err
+	}
+	line.Close()
+
+	var user models.User
+
+	if line.Next() {
+		if err = line.Scan(&user.ID, &user.Username, &user.Email, &user.CreatedIn); err != nil {
+			return models.User{}, err
+		}
+	}
+
+	return user, nil
+}
 //Update vai atualizar os dados de um usuário no banco de dados;
 func (u users) Update(ID uint64, user models.User) error {
 
