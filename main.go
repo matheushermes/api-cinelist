@@ -15,7 +15,7 @@ func main() {
 	r := router.Generate()
 
 	//Cors
-	allowedHeader := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type"})
+	allowedHeader := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
 	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
 	allowedMethods := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"})
 

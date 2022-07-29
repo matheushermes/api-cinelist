@@ -67,8 +67,6 @@ func SearchUsers(w http.ResponseWriter, r *http.Request) {
 
 //SearchUser vai buscar um único usuário registrado no banco de dados;
 func SearchUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
 	parameters := mux.Vars(r)
 
 	userId, err := strconv.ParseUint(parameters["userId"], 10, 64)
